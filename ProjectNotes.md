@@ -4,7 +4,7 @@
 * Still need to figure out how to make use of it for live preview support.
 
 ### Navigation
-* Still working on finding out if there are libraries to help this
+* https://developer.android.com/guide/navigation    Tutorial for Android Na.
 * We have to options for doing this:
     * Folders and subfolders with notes inside
     * Or notes that can contain subnotes. So a note would act as both a folder and a note.
