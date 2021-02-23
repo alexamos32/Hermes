@@ -9,6 +9,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Hermes">
+        <activity android:name="ca.unb.mobiledev.hermes.Edit">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ca.unb.mobiledev.hermes.MainActivity"/>
+        </activity>
+        <activity
+            android:name=".Detail"
+            android:label="Detail"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"/>
+        </activity>
+        <activity android:name=".AddNote">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"/>
+        </activity>
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
