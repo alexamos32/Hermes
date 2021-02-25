@@ -3,12 +3,15 @@ package ca.unb.mobiledev.hermes;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -23,6 +26,8 @@ public class Edit extends AppCompatActivity {
     Calendar calendar;
     String currentDate, currentTime;
     long noteId;
+    TextView htmlPreview;
+    MenuItem previewButton, editButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,6 +45,8 @@ public class Edit extends AppCompatActivity {
 
         final String title = note.getTitle();
         String content = note.getContent();
+
+        htmlPreview = findViewById(R.id.htmlPreview);
         noteTitle = findViewById(R.id.noteTitle);
         noteContent = findViewById(R.id.noteDetails);
         noteTitle.addTextChangedListener(new TextWatcher() {
@@ -82,6 +89,8 @@ public class Edit extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.save_menu,menu);
+        editButton = menu.findItem(R.id.editText);
+        previewButton = menu.findItem(R.id.preview);
         return true;
     }
 
@@ -104,6 +113,28 @@ public class Edit extends AppCompatActivity {
         else if(item.getItemId() == R.id.delete){
             Toast.makeText(this, "Canceled", Toast.LENGTH_SHORT).show();
             onBackPressed();
+        }
+
+        else if (item.getItemId() == R.id.preview){
+            String content = noteContent.getText().toString();
+            MarkdownRender mdRenderer = new MarkdownRender();
+            String input = mdRenderer.render(content);
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                htmlPreview.setText(Html.fromHtml(input,Html.FROM_HTML_MODE_LEGACY));
+            }
+            else {
+                htmlPreview.setText(Html.fromHtml(input));
+            }
+            noteContent.setVisibility(View.INVISIBLE);
+            htmlPreview.setVisibility(View.VISIBLE);
+            editButton.setVisible(true);
+            item.setVisible(false);
+        }
+        else if (item.getItemId() == R.id.editText){
+            noteContent.setVisibility(View.VISIBLE);
+            htmlPreview.setVisibility(View.INVISIBLE);
+            previewButton.setVisible(true);
+            item.setVisible(false);
         }
 
         return super.onOptionsItemSelected(item);

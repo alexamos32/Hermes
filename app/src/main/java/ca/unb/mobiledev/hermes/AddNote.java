@@ -3,12 +3,15 @@ package ca.unb.mobiledev.hermes;
 
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,12 +23,16 @@ import androidx.core.content.ContextCompat;
 
 import java.util.Calendar;
 
+
+
 public class AddNote extends AppCompatActivity {
     Toolbar toolbar;
     EditText noteTitle, noteDetails;
     Calendar calender;
     String currentDate;
     String currentTime;
+    TextView htmlPreview;
+    MenuItem previewButton, editButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,6 +43,8 @@ public class AddNote extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("New Note");
+
+        htmlPreview = findViewById(R.id.htmlPreview);
 
         noteDetails = findViewById(R.id.noteDetails);
         noteTitle = findViewById(R.id.noteTitle);
@@ -59,6 +68,7 @@ public class AddNote extends AppCompatActivity {
             }
         });
 
+
         calender = Calendar.getInstance();
         currentDate = calender.get(Calendar.YEAR) + "/" + (calender.get(Calendar.MONTH)+1) + "/" + calender.get(Calendar.DAY_OF_MONTH);
         Log.d("DATE", "Date: " + currentDate);
@@ -78,8 +88,12 @@ public class AddNote extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.save_menu,menu);
+
+        editButton = menu.findItem(R.id.editText);
+        previewButton = menu.findItem(R.id.preview);
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -103,6 +117,29 @@ public class AddNote extends AppCompatActivity {
             Toast.makeText(this, "Canceled", Toast.LENGTH_SHORT).show();
             onBackPressed();
         }
+
+        else if (item.getItemId() == R.id.preview){
+            String content = noteDetails.getText().toString();
+            MarkdownRender mdRenderer = new MarkdownRender();
+            String input = mdRenderer.render(content);
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                htmlPreview.setText(Html.fromHtml(input,Html.FROM_HTML_MODE_LEGACY));
+            }
+            else {
+                htmlPreview.setText(Html.fromHtml(input));
+            }
+            noteDetails.setVisibility(View.INVISIBLE);
+            htmlPreview.setVisibility(View.VISIBLE);
+            editButton.setVisible(true);
+            item.setVisible(false);
+        }
+        else if (item.getItemId() == R.id.editText){
+            noteDetails.setVisibility(View.VISIBLE);
+            htmlPreview.setVisibility(View.INVISIBLE);
+            previewButton.setVisible(true);
+            item.setVisible(false);
+        }
+
 
         return super.onOptionsItemSelected(item);
     }
