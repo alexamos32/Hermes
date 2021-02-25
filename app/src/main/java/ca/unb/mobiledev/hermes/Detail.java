@@ -2,6 +2,7 @@ package ca.unb.mobiledev.hermes;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,6 +15,8 @@ import androidx.appcompat.widget.Toolbar;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -33,7 +36,20 @@ public class Detail extends AppCompatActivity {
 
         getSupportActionBar().setTitle(note.getTitle());
         TextView details = findViewById(R.id.noteDesc);
-        details.setText(note.getContent());
+
+        //Setting the content for Details
+        String content = note.getContent();
+        MarkdownRender mdRenderer = new MarkdownRender();
+        content = mdRenderer.render(content);
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            details.setText(Html.fromHtml(content,Html.FROM_HTML_MODE_LEGACY));
+        }
+        else {
+            details.setText(Html.fromHtml(content));
+        }
+
+        //details.setText(note.getContent());
         details.setMovementMethod(new ScrollingMovementMethod());
 
         FloatingActionButton faButton = findViewById(R.id.fab);
