@@ -1,7 +1,9 @@
 package ca.unb.mobiledev.hermes;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
@@ -18,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class Edit extends AppCompatActivity {
@@ -28,6 +31,8 @@ public class Edit extends AppCompatActivity {
     long noteId;
     TextView htmlPreview;
     MenuItem previewButton, editButton;
+
+    final int DICTATE_REQUEST = 3;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -136,7 +141,41 @@ public class Edit extends AppCompatActivity {
             previewButton.setVisible(true);
             item.setVisible(false);
         }
+        else if (item.getItemId() == R.id.dictation){
+            Intent dicateIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+            try{
+                startActivityForResult(dicateIntent, DICTATE_REQUEST);
+            }
+            catch (ActivityNotFoundException e){
+                e.printStackTrace();
+            }
+
+        }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == DICTATE_REQUEST && resultCode == RESULT_OK) {
+            if (data != null){
+                ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                if (noteContent.getText().length()>0){
+                    String temp = noteContent.getText().toString();
+                    temp += "\n\n";
+                    temp += result.get(0);
+                    noteContent.setText(temp);
+                }
+                else {
+                    noteContent.setText(result.get(0));
+                }
+            }
+        }
     }
 }
