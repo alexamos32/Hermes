@@ -1,6 +1,7 @@
 package ca.unb.mobiledev.hermes;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
@@ -139,6 +140,7 @@ public class AddNote extends AppCompatActivity {
             previewButton.setVisible(true);
             item.setVisible(false);
         }
+
 
 
         return super.onOptionsItemSelected(item);

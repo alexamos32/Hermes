@@ -22,6 +22,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class Detail extends AppCompatActivity {
     long id;
+    String content;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +39,7 @@ public class Detail extends AppCompatActivity {
         TextView details = findViewById(R.id.noteDesc);
 
         //Setting the content for Details
-        String content = note.getContent();
+        content = note.getContent();
         MarkdownRender mdRenderer = new MarkdownRender();
         content = mdRenderer.render(content);
 
@@ -81,6 +82,15 @@ public class Detail extends AppCompatActivity {
             Intent intent = new Intent(this, Edit.class);
             intent.putExtra("ID", id);
             startActivity(intent);
+
+        }
+        else if (item.getItemId() == R.id.email){
+            Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+            emailIntent.setType("text/html");
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT, getSupportActionBar().getTitle());
+            emailIntent.putExtra(Intent.EXTRA_TEXT, content);
+            startActivity(Intent.createChooser(emailIntent, "Email:"));
+
 
         }
         return super.onOptionsItemSelected(item);
