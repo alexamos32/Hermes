@@ -7,4 +7,10 @@
         android:icon="@drawable/ic_add_black_24dp"
         android:title="Add New"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/add_folder"
+        android:icon="@drawable/ic_new_folder1"
+        android:title="Add New Folder"
+        app:showAsAction="ifRoom" />
 </menu>

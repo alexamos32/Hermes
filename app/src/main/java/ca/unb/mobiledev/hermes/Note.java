@@ -6,41 +6,46 @@ public class Note {
     private String content;
     private String date;
     private String time;
+    private long folderID;
     private String remTime;
     private String remDate;
 
-    Note(String title, String content, String date, String time){
+    Note(String title, String content, String date, String time, long folderID){
         this.title = title;
         this.content = content;
         this.date = date;
         this.time = time;
+        this.folderID = folderID;
         this.remTime = "ignore";
         this.remDate = "ignore";
     }
 
-    Note(long id,String title,String content,String date, String time){
+    Note(long id,String title,String content,String date, String time, long folderID){
         this.id = id;
         this.title = title;
         this.content = content;
         this.date = date;
         this.time = time;
+        this.folderID = folderID;
         this.remTime = "ignore";
         this.remDate = "ignore";
     }
-    Note(long id,String title,String content,String date, String time, String remTime, String remDate){
+    Note(long id,String title,String content,String date, String time, long folderID, String remTime, String remDate){
         this.id = id;
         this.title = title;
         this.content = content;
         this.date = date;
         this.time = time;
+        this.folderID = folderID;
         this.remTime = remTime;
         this.remDate = remDate;
     }
-    Note(String title,String content,String date, String time, String remTime, String remDate){
+    Note(String title,String content,String date, String time, long folderID, String remTime, String remDate){
         this.title = title;
         this.content = content;
         this.date = date;
         this.time = time;
+        this.folderID = folderID
         this.remTime = remTime;
         this.remDate = remDate;
     }
@@ -89,6 +94,15 @@ public class Note {
         this.time = time;
     }
 
+
+    public long getFolderID(){
+        return folderID;
+    }
+
+    public void setFolderID(long folderID){
+        this.folderID = folderID;
+    }
+
     public String getRemTime(){
         return remTime;
     }
@@ -102,7 +116,5 @@ public class Note {
     public void setRemDate(String remDate){
         this.remDate = remDate;
     }
-
-
 
 }
