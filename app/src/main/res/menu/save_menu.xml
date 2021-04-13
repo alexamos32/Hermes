@@ -29,9 +29,10 @@
         android:icon="@drawable/ic_check_black_24dp"
         android:title="Save"
         app:showAsAction="ifRoom" />
+
     <item android:id="@+id/notification"
         android:title="Reminder"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
 
 
 </menu>

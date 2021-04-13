@@ -26,4 +26,43 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="4dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <TextView
+            android:id="@+id/rem_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@color/paleyellow"
+            android:paddingLeft="5dp"
+            android:paddingTop="3dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="3dp"
+            android:text="ignore"
+            android:textColor="#000000"
+            android:textColorHighlight="@color/paleyellow"
+            android:textSize="18sp"
+            android:visibility="invisible"/>
+
+        <TextView
+            android:id="@+id/rem_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@color/paleyellow"
+            android:paddingLeft="5dp"
+            android:paddingTop="3dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="3dp"
+            android:text="ignore"
+            android:textColor="#000000"
+            android:textColorHighlight="@color/paleyellow"
+            android:textSize="18sp"
+            android:visibility="invisible"/>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

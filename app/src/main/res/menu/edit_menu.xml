@@ -10,5 +10,5 @@
     <item
         android:id="@+id/email"
         android:title="Email"
-        app:showAsAction="never"/>
+        app:showAsAction="ifRoom"/>
 </menu>

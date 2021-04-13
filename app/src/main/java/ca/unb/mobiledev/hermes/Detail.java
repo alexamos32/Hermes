@@ -23,6 +23,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 public class Detail extends AppCompatActivity {
     long id;
     String content;
+    String remTime, remDate;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +43,20 @@ public class Detail extends AppCompatActivity {
         content = note.getContent();
         MarkdownRender mdRenderer = new MarkdownRender();
         content = mdRenderer.render(content);
+
+        remTime = note.getRemTime();
+        remDate = note.getRemDate();
+
+        if(!remTime.equalsIgnoreCase("ignore")){
+            TextView remTimeText = findViewById(R.id.rem_time);
+            TextView remDateText = findViewById(R.id.rem_date);
+            remTimeText.setText(remTime);
+            remDateText.setText(remDate);
+            remTimeText.setVisibility(View.VISIBLE);
+            remDateText.setVisibility(View.VISIBLE);
+        }
+
+
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             details.setText(Html.fromHtml(content,Html.FROM_HTML_MODE_LEGACY));
