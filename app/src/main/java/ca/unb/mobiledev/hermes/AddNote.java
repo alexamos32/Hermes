@@ -105,7 +105,9 @@ public class AddNote extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == R.id.save){
             if(noteTitle.getText().length() != 0){
-                Note note = new Note(noteTitle.getText().toString(), noteDetails.getText().toString(), currentDate, currentTime);
+                Log.d("hhhhhhhh", "Note: "+ getIntent().getIntExtra("parentID", -1));
+                long folderID = getIntent().getIntExtra("parentID", -1);
+                Note note = new Note(noteTitle.getText().toString(), noteDetails.getText().toString(), currentDate, currentTime, folderID);
                 NoteDatabase db = new NoteDatabase(this);
                 long id = db.addNote(note);
                 Note check = db.getNote(id);
@@ -153,17 +155,9 @@ public class AddNote extends AppCompatActivity {
             catch (ActivityNotFoundException e){
                 e.printStackTrace();
             }
-
         }
 
-
-
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
     }
 
     @Override

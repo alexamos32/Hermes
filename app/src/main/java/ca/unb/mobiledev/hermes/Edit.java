@@ -102,7 +102,7 @@ public class Edit extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.save) {
-            Note note = new Note(noteId, noteTitle.getText().toString(),noteContent.getText().toString(),currentDate,currentTime);
+            Note note = new Note(noteId, noteTitle.getText().toString(),noteContent.getText().toString(),currentDate,currentTime, getIntent().getLongExtra("parentID", -1));
 
             Log.d("EDITED", "edited: before saving id -> " + note.getId());
             NoteDatabase db = new NoteDatabase(getApplicationContext());
@@ -153,11 +153,6 @@ public class Edit extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
     }
 
     @Override

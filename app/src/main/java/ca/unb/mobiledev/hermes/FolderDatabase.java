@@ -14,7 +14,7 @@ import java.util.List;
 public class FolderDatabase extends SQLiteOpenHelper{
 
     private static final int DATABASE_VERSION = 2;
-    private static final String DATABASE_NAME = "notesdb";
+    private static final String DATABASE_NAME = "foldersdb";
     private static final String DATABASE_TABLE = "folderstable";
 
     //Column names for DB table
@@ -78,7 +78,7 @@ public class FolderDatabase extends SQLiteOpenHelper{
     public List<Folder> getBaseDirectoryFolders() {
         SQLiteDatabase db = this.getWritableDatabase();
         String[] query = new String[] {KEY_ID, KEY_PARENT_ID, KEY_NAME};
-        Cursor cursor = db.query(DATABASE_TABLE, query, KEY_PARENT_ID + "= NULL", null, null, null, null);
+        Cursor cursor = db.query(DATABASE_TABLE, query, KEY_PARENT_ID + "= -1", null, null, null, null);
 
         List<Folder> folderList = new ArrayList();
         if(cursor.moveToFirst()){

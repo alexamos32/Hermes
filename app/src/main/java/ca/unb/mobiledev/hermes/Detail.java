@@ -81,8 +81,8 @@ public class Detail extends AppCompatActivity {
         if(item.getItemId() == R.id.edit) {
             Intent intent = new Intent(this, Edit.class);
             intent.putExtra("ID", id);
+            intent.putExtra("parentID", getIntent().getLongExtra("parentID", -1));
             startActivity(intent);
-
         }
         else if (item.getItemId() == R.id.email){
             Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
@@ -90,16 +90,7 @@ public class Detail extends AppCompatActivity {
             emailIntent.putExtra(Intent.EXTRA_SUBJECT, getSupportActionBar().getTitle());
             emailIntent.putExtra(Intent.EXTRA_TEXT, content);
             startActivity(Intent.createChooser(emailIntent, "Email:"));
-
-
         }
         return super.onOptionsItemSelected(item);
-
-    }
-
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
     }
 }

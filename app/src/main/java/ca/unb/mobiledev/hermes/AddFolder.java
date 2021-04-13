@@ -1,6 +1,7 @@
 package ca.unb.mobiledev.hermes;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
@@ -27,29 +28,25 @@ import java.util.Calendar;
 
 public class AddFolder extends AppCompatActivity {
     Toolbar toolbar;
-    EditText noteTitle, noteDetails;
+    EditText folderName;
     Calendar calender;
     String currentDate;
     String currentTime;
-    TextView htmlPreview;
-    MenuItem previewButton, editButton;
+    MenuItem saveButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_note);
+        setContentView(R.layout.activity_add_folder);
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("New Folder");
 
-        htmlPreview = findViewById(R.id.htmlPreview);
+        folderName = findViewById(R.id.folderName);
 
-        noteDetails = findViewById(R.id.noteDetails);
-        noteTitle = findViewById(R.id.noteTitle);
-
-        noteTitle.addTextChangedListener(new TextWatcher() {
+        folderName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -87,10 +84,9 @@ public class AddFolder extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.save_menu,menu);
+        inflater.inflate(R.menu.new_folder_menu,menu);
 
-        editButton = menu.findItem(R.id.editText);
-        previewButton = menu.findItem(R.id.preview);
+        saveButton = menu.findItem(R.id.save);
         return true;
     }
 
@@ -98,54 +94,28 @@ public class AddFolder extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == R.id.save){
-            if(noteTitle.getText().length() != 0){
-                Note note = new Note(noteTitle.getText().toString(), noteDetails.getText().toString(), currentDate, currentTime);
-                NoteDatabase db = new NoteDatabase(this);
-                long id = db.addNote(note);
-                Note check = db.getNote(id);
-                Log.d("inserted", "Note: "+ id + ", Title: " + check.getTitle() + ", Date: " + check.getDate() + ", Time: " + check.getTime());
+            if(folderName.getText().length() != 0){
+                Folder folder = new Folder(getIntent().getIntExtra("parentID", -1), folderName.getText().toString());
+                FolderDatabase db = new FolderDatabase(this);
+                long id = db.addFolder(folder.getFolderName(), folder.getParentID());
+                Folder check = db.getFolder(id);
+                Log.d("inserted", "Note: "+ id + ", Title: " + check.getFolderName() + ", Date: " + check.getParentID());
                 onBackPressed();
 
-                Toast.makeText(this, "Note Saved.", Toast.LENGTH_SHORT).show();
-
+                Toast.makeText(this, "Folder Saved.", Toast.LENGTH_SHORT).show();
             }
             else {
-                noteTitle.setError("Title cannot be blank.");
+                Toast.makeText(this, "Folder name cannot be blank.", Toast.LENGTH_SHORT).show();
             }
         }
-        else if(item.getItemId() == R.id.delete){
-            Toast.makeText(this, "Canceled", Toast.LENGTH_SHORT).show();
-            onBackPressed();
-        }
-
-        else if (item.getItemId() == R.id.preview){
-            String content = noteDetails.getText().toString();
-            MarkdownRender mdRenderer = new MarkdownRender();
-            String input = mdRenderer.render(content);
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                htmlPreview.setText(Html.fromHtml(input,Html.FROM_HTML_MODE_LEGACY));
-            }
-            else {
-                htmlPreview.setText(Html.fromHtml(input));
-            }
-            noteDetails.setVisibility(View.INVISIBLE);
-            htmlPreview.setVisibility(View.VISIBLE);
-            editButton.setVisible(true);
-            item.setVisible(false);
-        }
-        else if (item.getItemId() == R.id.editText){
-            noteDetails.setVisibility(View.VISIBLE);
-            htmlPreview.setVisibility(View.INVISIBLE);
-            previewButton.setVisible(true);
-            item.setVisible(false);
-        }
-
-
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        Toast.makeText(this, "Folder name cannot be blank.", Toast.LENGTH_SHORT).show();
+        Intent i = new Intent(this, MainActivity.class);
+        i.putExtra("parentID", getIntent().getIntExtra("parentID", -1));
+        startActivity(i);
     }
 }
