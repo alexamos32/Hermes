@@ -4,7 +4,7 @@ Version 1.0 brings forth a fully fledged note taking application with a plethora
 
 We are constantly working to improve user experience and committed to building the ultimate productivity tool. Moving forward we will continue fixing known bugs and adding useful new features to Hermes.
 
-**Note:** Currently due to the issue of loading multiple images into the layout, this feature as been left separately on the image_capture branch. Once it has been fixed it will be merged with the rest of the application
+**Note:** Currently due to the issue of loading multiple images into the layout, this feature has been left separately on the image_capture branch. Once it has been fixed it will be merged with the rest of the application
 
 **Features.**  
 * Markdown Support
