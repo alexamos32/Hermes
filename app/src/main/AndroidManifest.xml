@@ -9,6 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Hermes">
+
+        <receiver android:name="ca.unb.mobiledev.hermes.AlarmReceiver" android:enabled="true"/>
+
         <activity android:name="ca.unb.mobiledev.hermes.Edit">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

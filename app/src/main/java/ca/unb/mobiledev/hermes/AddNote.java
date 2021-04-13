@@ -1,9 +1,13 @@
 package ca.unb.mobiledev.hermes;
 
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.speech.RecognizerIntent;
 import android.text.Editable;
 import android.text.Html;
@@ -23,6 +27,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,6 +42,10 @@ public class AddNote extends AppCompatActivity {
     String currentTime;
     TextView htmlPreview;
     MenuItem previewButton, editButton;
+    TextView reminderTimeText, reminderDateText;
+    String remTime, remDate;
+    private AlarmManager alarmManager;
+    private PendingIntent reminderIntent;
 
     final int DICTATE_REQUEST = 3;
 
@@ -54,6 +63,13 @@ public class AddNote extends AppCompatActivity {
 
         noteDetails = findViewById(R.id.noteDetails);
         noteTitle = findViewById(R.id.noteTitle);
+
+        reminderDateText = findViewById(R.id.rem_date);
+        reminderTimeText = findViewById(R.id.rem_time);
+
+
+
+
 
         noteTitle.addTextChangedListener(new TextWatcher() {
             @Override
@@ -155,6 +171,9 @@ public class AddNote extends AppCompatActivity {
             }
 
         }
+        else if(item.getItemId() == R.id.notification){
+            launchNotification();
+        }
 
 
 
@@ -184,4 +203,55 @@ public class AddNote extends AppCompatActivity {
             }
         }
     }
+
+    //Launch notification Reminder window
+    public void launchNotification(){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        NoteReminder noteReminder = new NoteReminder();
+
+        //Sending the current saved time reminder as arguments
+        Bundle bundle = new Bundle();
+        bundle.putString("time", reminderTimeText.getText().toString());
+        bundle.putString("date", reminderDateText.getText().toString());
+        noteReminder.setArguments(bundle);
+        noteReminder.show(fragmentManager, "Show Fragment");
+    }
+    //Set the Reminder textviews with selected values
+    //This method is called from NoteReminder class
+    public void setReminder(String time, String date){
+        remTime = time;
+        remDate = date;
+        reminderTimeText.setText(time);
+        reminderDateText.setText(date);
+        reminderTimeText.setVisibility(View.VISIBLE);
+        reminderDateText.setVisibility(View.VISIBLE);
+
+        //Setting up Calendar object to get alarm delay
+        String[] timeArr = time.split(":", 2);
+        String[] dateArr = date.split("-", 3);
+
+        int hour = Integer.parseInt(timeArr[0]);
+        int minute = Integer.parseInt(timeArr[1]);
+        int day = Integer.parseInt(dateArr[0]);
+        int month = Integer.parseInt(dateArr[1])-1;
+        int year = Integer.parseInt(dateArr[2]);
+
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DAY_OF_MONTH, day);
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        Log.i("TIMEUNTIL", String.valueOf(calendar.getTimeInMillis()- System.currentTimeMillis()));
+        //Setting up the alarm manager to send the alarm intent
+        Intent intent = new Intent(AddNote.this, AlarmReceiver.class);
+    //    intent.putExtra("title", noteTitle.getText().toString());
+ //       intent.putExtra("classname", AddNote.class);
+        alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        reminderIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, intent, 0);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), reminderIntent );
+
+    }
+
 }
