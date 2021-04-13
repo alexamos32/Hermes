@@ -45,7 +45,7 @@ public class Note {
         this.content = content;
         this.date = date;
         this.time = time;
-        this.folderID = folderID
+        this.folderID = folderID;
         this.remTime = remTime;
         this.remDate = remDate;
     }

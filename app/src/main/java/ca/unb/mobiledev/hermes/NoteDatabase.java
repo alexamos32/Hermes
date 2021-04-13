@@ -13,7 +13,7 @@ import java.util.List;
 
 public class NoteDatabase extends SQLiteOpenHelper{
 
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
     private static final String DATABASE_NAME = "notesdb";
     private static final String DATABASE_TABLE = "notestable";
 
@@ -93,7 +93,7 @@ public class NoteDatabase extends SQLiteOpenHelper{
                 cursor.getString(2),
                 cursor.getString(3),
                 cursor.getString(4),
-                cursor.getLong(5));
+                cursor.getLong(5),
                 cursor.getString(6),
                 cursor.getString(7));
 
@@ -103,7 +103,7 @@ public class NoteDatabase extends SQLiteOpenHelper{
     public List<Note> getNotesInFolder(long id) {
         List<Note> allNotes = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        String[] query = new String[] {KEY_ID, KEY_TITLE, KEY_CONTENT, KEY_DATE, KEY_TIME, FOLDER_ID};
+        String[] query = new String[] {KEY_ID, KEY_TITLE, KEY_CONTENT, KEY_DATE, KEY_TIME, FOLDER_ID, KEY_REM_TIME, KEY_REM_DATE};
         Cursor cursor = db.query(DATABASE_TABLE, query, FOLDER_ID + "=?", new String[] {String.valueOf(id)}, null, null, null, null);
 
         if(cursor.moveToFirst()){
