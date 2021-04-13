@@ -1,9 +1,13 @@
 package ca.unb.mobiledev.hermes;
 
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.speech.RecognizerIntent;
 import android.text.Editable;
 import android.text.Html;
@@ -23,6 +27,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,6 +42,10 @@ public class AddNote extends AppCompatActivity {
     String currentTime;
     TextView htmlPreview;
     MenuItem previewButton, editButton;
+    TextView reminderTimeText, reminderDateText;
+    String remTime = "ignore", remDate = "ignore";
+    private AlarmManager alarmManager;
+    private PendingIntent reminderIntent;
 
     final int DICTATE_REQUEST = 3;
 
@@ -54,6 +63,13 @@ public class AddNote extends AppCompatActivity {
 
         noteDetails = findViewById(R.id.noteDetails);
         noteTitle = findViewById(R.id.noteTitle);
+
+        reminderDateText = findViewById(R.id.rem_date);
+        reminderTimeText = findViewById(R.id.rem_time);
+
+
+
+
 
         noteTitle.addTextChangedListener(new TextWatcher() {
             @Override
@@ -107,11 +123,44 @@ public class AddNote extends AppCompatActivity {
             if(noteTitle.getText().length() != 0){
                 Log.d("hhhhhhhh", "Note: "+ getIntent().getIntExtra("parentID", -1));
                 long folderID = getIntent().getIntExtra("parentID", -1);
-                Note note = new Note(noteTitle.getText().toString(), noteDetails.getText().toString(), currentDate, currentTime, folderID);
+                Note note = new Note(noteTitle.getText().toString(), noteDetails.getText().toString(), currentDate, currentTime, folderID, remTime, remDate);
+
                 NoteDatabase db = new NoteDatabase(this);
                 long id = db.addNote(note);
                 Note check = db.getNote(id);
                 Log.d("inserted", "Note: "+ id + ", Title: " + check.getTitle() + ", Date: " + check.getDate() + ", Time: " + check.getTime());
+
+                //Setting the reminder if an actual time date has been selected
+                if (!remTime.equalsIgnoreCase("ignore")){
+                    //Setting up Calendar object to get alarm delay
+                    String[] timeArr = remTime.split(":", 2);
+                    String[] dateArr = remDate.split("-", 3);
+
+                    int hour = Integer.parseInt(timeArr[0]);
+                    int minute = Integer.parseInt(timeArr[1]);
+                    int day = Integer.parseInt(dateArr[0]);
+                    int month = Integer.parseInt(dateArr[1])-1;
+                    int year = Integer.parseInt(dateArr[2]);
+
+
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.set(Calendar.YEAR, year);
+                    calendar.set(Calendar.MONTH, month);
+                    calendar.set(Calendar.DAY_OF_MONTH, day);
+                    calendar.set(Calendar.HOUR_OF_DAY, hour);
+                    calendar.set(Calendar.MINUTE, minute);
+                    Log.i("TIMEUNTIL", String.valueOf(calendar.getTimeInMillis()- System.currentTimeMillis()));
+                    //Setting up the alarm manager to send the alarm intent
+                    Intent intent = new Intent(AddNote.this, AlarmReceiver.class);
+                    intent.putExtra("title", noteTitle.getText().toString());
+                    intent.putExtra("reminderId", id);
+                    //       intent.putExtra("classname", AddNote.class);
+                    alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+                    reminderIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, intent, 0);
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), reminderIntent );
+                }
+
+                //Closing window.
                 onBackPressed();
 
                 Toast.makeText(this, "Note Saved.", Toast.LENGTH_SHORT).show();
@@ -156,6 +205,9 @@ public class AddNote extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+        else if(item.getItemId() == R.id.notification){
+            launchNotification();
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -178,4 +230,42 @@ public class AddNote extends AppCompatActivity {
             }
         }
     }
+
+    //Launch notification Reminder window
+    public void launchNotification(){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        NoteReminder noteReminder = new NoteReminder();
+
+        //Sending the current saved time reminder as arguments
+        Bundle bundle = new Bundle();
+        bundle.putString("time", reminderTimeText.getText().toString());
+        bundle.putString("date", reminderDateText.getText().toString());
+        bundle.putString("class" , "add");
+        noteReminder.setArguments(bundle);
+        noteReminder.show(fragmentManager, "Show Fragment");
+    }
+    //Set the Reminder textviews with selected values
+    //This method is called from NoteReminder class
+    //TODO Change the notificaton setting to after the note is saved to db
+    // We can use the note id as uniqure notificaton ID so that each note can have its own reminder
+    public void setReminder(String time, String date){
+        remTime = time;
+        remDate = date;
+        reminderTimeText.setText(time);
+        reminderDateText.setText(date);
+        reminderTimeText.setVisibility(View.VISIBLE);
+        reminderDateText.setVisibility(View.VISIBLE);
+    }
+    //Only need to do this part for add note.
+    //Since the not has yet to be created there will be note existing notification set.
+    //Setting reminder string back to ignore will ensure no reminder is set during save
+    public void deleteReminder(){
+        remTime = "ignore";
+        remDate = "ignore";
+        reminderTimeText.setText("ignore");
+        reminderDateText.setText("ignore");
+        reminderTimeText.setVisibility(View.INVISIBLE);
+        reminderDateText.setVisibility(View.INVISIBLE);
+    }
+
 }
