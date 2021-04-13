@@ -6,12 +6,16 @@ public class Note {
     private String content;
     private String date;
     private String time;
+    private String remTime;
+    private String remDate;
 
     Note(String title, String content, String date, String time){
         this.title = title;
         this.content = content;
         this.date = date;
         this.time = time;
+        this.remTime = "ignore";
+        this.remDate = "ignore";
     }
 
     Note(long id,String title,String content,String date, String time){
@@ -20,6 +24,25 @@ public class Note {
         this.content = content;
         this.date = date;
         this.time = time;
+        this.remTime = "ignore";
+        this.remDate = "ignore";
+    }
+    Note(long id,String title,String content,String date, String time, String remTime, String remDate){
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.date = date;
+        this.time = time;
+        this.remTime = remTime;
+        this.remDate = remDate;
+    }
+    Note(String title,String content,String date, String time, String remTime, String remDate){
+        this.title = title;
+        this.content = content;
+        this.date = date;
+        this.time = time;
+        this.remTime = remTime;
+        this.remDate = remDate;
     }
 
     Note() {
@@ -65,4 +88,21 @@ public class Note {
     public void setTime(String time){
         this.time = time;
     }
+
+    public String getRemTime(){
+        return remTime;
+    }
+
+    public void setRemTime(String remTime){
+        this.remTime = remTime;
+    }
+
+    public String getRemDate(){ return remDate; }
+
+    public void setRemDate(String remDate){
+        this.remDate = remDate;
+    }
+
+
+
 }

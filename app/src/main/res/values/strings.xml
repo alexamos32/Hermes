@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Hermes</string>
+    <string name="channel_name">Hermes NotificationChannel</string>
+    <string name="channel_description">Channel for note notification</string>
 </resources>
