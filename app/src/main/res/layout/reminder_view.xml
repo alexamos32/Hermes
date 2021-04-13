@@ -110,6 +110,19 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/delete_reminder"
+                android:layout_width="wrap_content"
+                android:layout_height="34dp"
+                android:layout_marginLeft="35dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1"
+                android:background="#0CE822"
+                android:outlineAmbientShadowColor="#F60909"
+                android:text="Delete"
+                android:textColor="#4400FD" />
+
+            <Button
                 android:id="@+id/save_reminder"
                 android:layout_width="wrap_content"
                 android:layout_height="34dp"

@@ -16,7 +16,7 @@ public class ReminderDate extends DialogFragment {
     View currentView;
     Button saveDate, cancelDate;
     DatePicker dp;
-    String timeVal, dateVal;
+    String timeVal, dateVal, className;
 
     @Nullable
     @Override
@@ -29,6 +29,7 @@ public class ReminderDate extends DialogFragment {
         if (getArguments() != null){
             timeVal = getArguments().getString("time");
             dateVal = getArguments().getString("date");
+            className = getArguments().getString("class");
         }
 
         //Setting the date picker to previous val if one exists
@@ -50,6 +51,7 @@ public class ReminderDate extends DialogFragment {
                 Bundle bundle = new Bundle();
                 bundle.putString("time",timeVal);
                 bundle.putString("date", dateVal);
+                bundle.putString("class" ,className);
                 noteReminder.setArguments(bundle);
                 noteReminder.show(getFragmentManager(), "Relaunching Reminder View");
                 dismiss();
@@ -63,6 +65,7 @@ public class ReminderDate extends DialogFragment {
                 Bundle bundle = new Bundle();
                 bundle.putString("time",timeVal);
                 bundle.putString("date", dateVal);
+                bundle.putString("class" ,className);
                 noteReminder.setArguments(bundle);
                 noteReminder.show(getFragmentManager(), "Cancelling Date Set");
                 dismiss();

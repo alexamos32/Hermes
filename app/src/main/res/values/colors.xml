@@ -11,4 +11,6 @@
     <color name="colorPrimaryDark">#3700BE</color>
     <color name="colorAccent">#D81B60</color>
     <color name="lightgrey">#999</color>
+    <color name="bluegrey">#24203b</color>
+    <color name="paleyellow">#fcf5a7</color>
 </resources>

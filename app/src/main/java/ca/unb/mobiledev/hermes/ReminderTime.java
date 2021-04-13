@@ -16,7 +16,7 @@ public class ReminderTime extends DialogFragment {
     View currentView;
     Button saveTime, cancelTime;
     TimePicker tp;
-    String timeVal, dateVal;
+    String timeVal, dateVal, className;
 
     @Nullable
     @Override
@@ -34,6 +34,7 @@ public class ReminderTime extends DialogFragment {
         if (getArguments() != null){
             timeVal = getArguments().getString("time");
             dateVal = getArguments().getString("date");
+            className = getArguments().getString("class");
         }
 
         if (!timeVal.equalsIgnoreCase("ignore")){
@@ -62,6 +63,7 @@ public class ReminderTime extends DialogFragment {
                 Bundle bundle = new Bundle();
                 bundle.putString("time", timeVal);
                 bundle.putString("date", dateVal);
+                bundle.putString("class" ,className);
                 noteReminder.setArguments(bundle);
                 noteReminder.show(getFragmentManager(), "Relaunching Reminder View");
 
@@ -76,6 +78,7 @@ public class ReminderTime extends DialogFragment {
                 Bundle bundle = new Bundle();
                 bundle.putString("time", timeVal);
                 bundle.putString("date", dateVal);
+                bundle.putString("class" ,className);
                 noteReminder.setArguments(bundle);
                 noteReminder.show(getFragmentManager(), "Cancelled Reminder Time Set");
                 dismiss();

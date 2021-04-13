@@ -18,7 +18,7 @@ This Class serves as an Alarm receiver for the Reminder that can be set by Add n
  */
 public class AlarmReceiver extends BroadcastReceiver {
 
-    private int notificationId = 7;
+
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -32,6 +32,9 @@ public class AlarmReceiver extends BroadcastReceiver {
             NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
+        Bundle bundle = intent.getExtras();
+        long id = (long)bundle.get("reminderId");
+        String title = bundle.getString("title");
         //Launching Notification
         //Intent mainIntent = new Intent(context, (Class)intent.getExtras().get("classname"));
         Intent mainIntent = new Intent(context, AddNote.class);
@@ -40,13 +43,13 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "ca.unb.mobiledev.hermes")
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("Test Title")
+                .setContentTitle(title)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        notificationManager.notify(notificationId, builder.build() );
+        notificationManager.notify((int)id, builder.build() );
 
     }
 }

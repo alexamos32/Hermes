@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+       // NoteDatabase db = new NoteDatabase(this);
+      //  db.onUpgrade();
 
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white));

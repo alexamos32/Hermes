@@ -25,9 +25,9 @@ a reminder using a date and time picker.
 public class NoteReminder extends DialogFragment {
     View currentView;
     TextView timeText, dateText;
-    Button saveButton;
+    Button saveButton, deleteButton;
     ImageButton backButton;
-    String timeVal, dateVal;
+    String timeVal, dateVal, className;
 
     @Nullable
     @Override
@@ -37,10 +37,12 @@ public class NoteReminder extends DialogFragment {
         dateText = currentView.findViewById(R.id.date_text);
         saveButton = currentView.findViewById(R.id.save_reminder);
         backButton = currentView.findViewById(R.id.back_button);
+        deleteButton = currentView.findViewById(R.id.delete_reminder);
 
         if (getArguments() != null) {
             timeVal = getArguments().getString("time");
             dateVal = getArguments().getString("date");
+            className = getArguments().getString("class");
         }
         if (timeVal.equalsIgnoreCase("ignore") && dateVal.equalsIgnoreCase("ignore")){
             //Use two formats to get both time and date
@@ -65,6 +67,7 @@ public class NoteReminder extends DialogFragment {
                 Bundle bundle = new Bundle();
                 bundle.putString("time", timeVal);
                 bundle.putString("date", dateVal);
+                bundle.putString("class" ,className);
                 reminderTime.setArguments(bundle);
                 reminderTime.show(timeFragment,"Time Pick Fragment");
                 dismiss();
@@ -81,6 +84,7 @@ public class NoteReminder extends DialogFragment {
                 Bundle bundle = new Bundle();
                 bundle.putString("time", timeVal);
                 bundle.putString("date", dateVal);
+                bundle.putString("class" ,className);
                 reminderDate.setArguments(bundle);
                 reminderDate.show(dateFragment, "Date Pick Fragment");
                 dismiss();
@@ -100,8 +104,30 @@ public class NoteReminder extends DialogFragment {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getContext(), "Reminder set", Toast.LENGTH_SHORT).show();
-                AddNote addNote = (AddNote)getActivity();
-                addNote.setReminder(timeVal, dateVal);
+                if(className.equalsIgnoreCase("add")){
+                    AddNote addNote = (AddNote)getActivity();
+                    addNote.setReminder(timeVal, dateVal);
+                }
+                else{
+                    Edit edit = (Edit)getActivity();
+                    edit.setReminder(timeVal, dateVal);
+                }
+                dismiss();
+            }
+        });
+
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "Reminder deleted", Toast.LENGTH_SHORT).show();
+                if(className.equalsIgnoreCase("add")){
+                    AddNote addNote = (AddNote)getActivity();
+                    addNote.deleteReminder();
+                }
+                else {
+                    Edit edit = (Edit) getActivity();
+                    edit.deleteReminder();
+                }
                 dismiss();
             }
         });
