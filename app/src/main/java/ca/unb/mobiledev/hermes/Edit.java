@@ -10,6 +10,7 @@ import android.speech.RecognizerIntent;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -66,6 +67,7 @@ public class Edit extends AppCompatActivity {
         reminderTimeText = findViewById(R.id.rem_time);
 
         htmlPreview = findViewById(R.id.htmlPreview);
+        htmlPreview.setMovementMethod(new ScrollingMovementMethod());
         noteTitle = findViewById(R.id.noteTitle);
         noteContent = findViewById(R.id.noteDetails);
         noteTitle.addTextChangedListener(new TextWatcher() {
