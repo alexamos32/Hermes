@@ -70,6 +70,7 @@ public class Edit extends AppCompatActivity {
         htmlPreview.setMovementMethod(new ScrollingMovementMethod());
         noteTitle = findViewById(R.id.noteTitle);
         noteContent = findViewById(R.id.noteDetails);
+        noteContent.setMovementMethod(new ScrollingMovementMethod());
         noteTitle.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

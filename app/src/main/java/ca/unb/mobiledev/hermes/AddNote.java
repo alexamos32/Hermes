@@ -69,7 +69,7 @@ public class AddNote extends AppCompatActivity {
         reminderTimeText = findViewById(R.id.rem_time);
 
         htmlPreview.setMovementMethod(new ScrollingMovementMethod());
-
+        noteDetails.setMovementMethod(new ScrollingMovementMethod());
 
 
         noteTitle.addTextChangedListener(new TextWatcher() {
